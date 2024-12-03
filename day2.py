@@ -16,6 +16,7 @@ def trial_dampen(report: list[int]):
 
 	return False
 
+
 def main(lines: list[str]):
 	reports = []
 	for line in lines:
@@ -24,10 +25,7 @@ def main(lines: list[str]):
 	numsafe = 0
 	dampsafe = 0
 	for report in reports:
-		diff = list(map(lambda x, y: x - y, report[:-1], report[1:]))
-		l = min(diff)
-		h = max(diff)
-		if (l >= 1 and h <= 3) or (l >= -3 and h <= -1):
+		if safe(report):
 			numsafe += 1
 		elif trial_dampen(report):
 			dampsafe += 1
