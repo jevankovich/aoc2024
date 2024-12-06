@@ -1,35 +1,55 @@
 #!/usr/bin/python3
 import sys
 
-def path(start, obstructions, width, height):
-	guard = start
+def walk(guard, obstructions, width, height, dx=0, dy=-1):
+	while 0 <= guard[0] < width and 0 <= guard[1] < height:
+		nextpos = (guard[0] + dx, guard[1] + dy)
 
-	dx = 0
-	dy = -1
-	visited = set()
+		if nextpos in obstructions:
+			dx, dy = -dy, dx
+			continue
+
+		# print(guard, '->', nextpos)
+		yield guard, nextpos
+		guard = nextpos
+
+def doesloop(guard, dx, dy, obstructions, width, height):
 	hit = set()
-	escapes = False
 
 	while 0 <= guard[0] < width and 0 <= guard[1] < height:
-		visited.add(guard)
-
 		nextpos = (guard[0] + dx, guard[1] + dy)
 
 		if nextpos in obstructions:
 			if (nextpos, dx, dy) in hit:
-				# We've already hit this obstacle from this side, thus we've looped
-				return False, visited
-
+				return True
 			hit.add((nextpos, dx, dy))
-			tmp = dx
-			dx = -dy
-			dy = tmp
+			dx, dy = -dy, dx
 			continue
 
-		# print(guard, '->', nextpos)
 		guard = nextpos
 	
-	return True, visited
+	return False
+			
+
+def countloops(guard, obstructions, width, height):
+	loops = 0
+	tried = set()
+	for g, n in walk(guard, obstructions, width, height):
+		dx = n[0] - g[0]
+		dy = n[1] - g[1]
+
+		if n in tried:
+			continue
+		tried.add(n)
+
+		obstructions.add(n)
+		if doesloop(g, dx, dy, obstructions, width, height):
+			loops += 1
+		obstructions.remove(n)
+
+
+	return loops
+	
 
 def main(lines: list[str]):
 	height = len(lines)
@@ -45,18 +65,9 @@ def main(lines: list[str]):
 			elif c == '^':
 				guard = (x, y)
 	
-	_, visited = path(guard, obstructions, width, height)
+	visited = {guard for guard, _ in walk(guard, obstructions, width, height)}
 	print(len(visited))
-
-	visited.remove(guard)
-	loops = 0
-	for loc in visited:
-		trial_obs = obstructions | {loc}
-		escape, _ = path(guard, trial_obs, width, height)
-		if not escape:
-			loops += 1
-	
-	print(loops)
+	print(countloops(guard, obstructions, width, height))
 
 
 if __name__ == '__main__':
