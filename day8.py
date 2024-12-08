@@ -23,12 +23,9 @@ def main(lines: list[str]):
 
 	antinodes = set()
 	more_antinodes = set()
-	for freq in antennas.keys():
-		for x1, y1 in antennas[freq]:
-			for x2, y2 in antennas[freq]:
-				if x1 == x2 and y1 == y2:
-					continue
-
+	for antlist in antennas.values():
+		for i, (x1, y1) in enumerate(antlist):
+			for x2, y2 in antlist[i+1:]:
 				dx = x2 - x1
 				dy = y2 - y1
 				# print(x1, x2, dx)
