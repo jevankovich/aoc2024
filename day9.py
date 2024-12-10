@@ -49,7 +49,7 @@ def parttwo(line: str) -> int:
 
 		files.append((seek, file_blocks))
 		if free_blocks:
-			frees.append((seek + file_blocks, free_blocks, i // 2))
+			frees.append((seek + file_blocks, free_blocks))
 
 		seek += file_blocks + free_blocks
 		pass
@@ -72,11 +72,9 @@ def parttwo(line: str) -> int:
 		if free[0] > file[0]:
 			continue
 
-		newpred = files[free[2]]
-
 		# move the file: change its position, shrink the free block we're moving it into
 		files[fileid] = (free[0], file[1])
-		frees[i] = (free[0] + file[1], free[1] - file[1], fileid)
+		frees[i] = (free[0] + file[1], free[1] - file[1])
 		# don't bother touching the free block we're moving out of, it doesn't matter
 
 	checksum = 0
