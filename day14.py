@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import sys
 
-def main(lines: list[str], width: int, height: int):
+def main(lines: list[str], width: int = 101, height: int = 103):
 	q1, q2, q3, q4 = 0, 0, 0, 0
 	bots = []
 	start = set()
@@ -64,6 +64,8 @@ def main(lines: list[str], width: int, height: int):
 
 					print('|')
 				print()
+
+			break
 
 		if end == start:
 			break
